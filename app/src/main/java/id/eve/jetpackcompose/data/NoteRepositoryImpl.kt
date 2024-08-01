@@ -1,7 +1,7 @@
 package id.eve.jetpackcompose.data
 
 import com.google.firebase.firestore.CollectionReference
-import id.eve.jetpackcompose.data.response.NoteResponse
+import id.eve.jetpackcompose.data.response.NoteDto
 import id.eve.jetpackcompose.domain.model.Note
 import id.eve.jetpackcompose.domain.repository.NoteRepository
 
@@ -22,10 +22,10 @@ class NoteRepositoryImpl(
         db.get().addOnSuccessListener { result ->
             val cours = mutableListOf<Note>()
             for (document in result) {
-                val response = document.toObject(NoteResponse::class.java).apply {
+                val response = document.toObject(NoteDto::class.java).apply {
                     id = document.id
                 }
-                val course = response.mappingToCourse()
+                val course = response.toEntity()
                 cours.add(course)
             }
             onSuccess(cours)
