@@ -1,6 +1,7 @@
 package id.eve.jetpackcompose
 
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Note
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,7 +23,7 @@ import id.eve.jetpackcompose.ui.theme.JetpackComposeTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
+    private val viewModel: NoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     AppNavigation(
                         navController = navController,
-                        noteViewModel = noteViewModel
+                        noteViewModel = viewModel
                     )
                 }
             }
@@ -43,8 +44,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(
+    noteViewModel: NoteViewModel,
     navController: NavHostController,
-    noteViewModel: NoteViewModel
 ) {
     NavHost(
         navController = navController,

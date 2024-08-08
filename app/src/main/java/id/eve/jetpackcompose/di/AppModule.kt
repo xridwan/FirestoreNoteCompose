@@ -8,8 +8,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.eve.jetpackcompose.data.NoteRepositoryImpl
 import id.eve.jetpackcompose.domain.repository.NoteRepository
-import id.eve.jetpackcompose.domain.usecase.NoteInteractor
+import id.eve.jetpackcompose.domain.usecase.AddNote
+import id.eve.jetpackcompose.domain.usecase.DeleteNote
+import id.eve.jetpackcompose.domain.usecase.GetNotes
 import id.eve.jetpackcompose.domain.usecase.NoteUseCase
+import id.eve.jetpackcompose.domain.usecase.UpdateNote
 import javax.inject.Singleton
 
 @Module
@@ -25,13 +28,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCourseRepository(db: CollectionReference): NoteRepository {
+    fun provideNoteRepository(db: CollectionReference): NoteRepository {
         return NoteRepositoryImpl(db)
     }
 
     @Provides
     @Singleton
-    fun provideAddCourseUseCase(noteRepository: NoteRepository): NoteUseCase {
-        return NoteInteractor(noteRepository)
+    fun provideNoteUseCase(noteRepository: NoteRepository): NoteUseCase {
+        return NoteUseCase(
+            addNote = AddNote(noteRepository),
+            getNotes = GetNotes(noteRepository),
+            updateNote = UpdateNote(noteRepository),
+            deleteNote = DeleteNote(noteRepository)
+        )
     }
 }

@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.eve.jetpackcompose.presenter.NoteViewModel
-import id.eve.jetpackcompose.utils.Utils.showToast
 
 @Composable
 fun NoteScreen(
@@ -58,10 +57,9 @@ fun NoteScreen(
     if (showDialog) {
         SaveNoteDialog(
             onConfirm = {
-                noteViewModel.saveNote {
-                    navigateToBack()
+                if (noteViewModel.saveNote()) {
                     showDialog = false
-                    context.showToast(it)
+                    navigateToBack()
                 }
             },
             onDismiss = { showDialog = false }
@@ -101,12 +99,18 @@ fun SaveNoteDialog(
         },
         confirmButton = {
             Button(onClick = onConfirm) {
-                Text("OK", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    "OK",
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Cancel", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    "Cancel",
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
         }
     )
@@ -145,7 +149,7 @@ fun NoteContent(
         ) {
             NoteInputField(
                 value = noteViewModel.noteTitle,
-                onValueChange = noteViewModel::onCourseNameChange,
+                onValueChange = noteViewModel::onNoteTitleChange,
                 placeholder = "Title",
                 textStyle = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.SemiBold,
@@ -154,7 +158,7 @@ fun NoteContent(
             )
             NoteInputField(
                 value = noteViewModel.noteDescription,
-                onValueChange = noteViewModel::onCourseDescriptionChange,
+                onValueChange = noteViewModel::onNoteDescriptionChange,
                 placeholder = "Start typing...",
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     letterSpacing = 0.5.sp,

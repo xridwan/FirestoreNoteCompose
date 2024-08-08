@@ -1,8 +1,6 @@
 package id.eve.jetpackcompose.presenter.notelist
 
 import android.content.Context
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,13 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import id.eve.jetpackcompose.presenter.CustomErrorText
+import id.eve.jetpackcompose.presenter.CustomLoading
 import id.eve.jetpackcompose.presenter.NoteViewModel
 import id.eve.jetpackcompose.utils.Utils.showToast
 
@@ -35,13 +33,15 @@ fun CourseListScreen(
     noteViewModel: NoteViewModel,
     navigateToAdd: () -> Unit
 ) {
-    val notes by remember { noteViewModel.notes }.collectAsState()
+//    val notes by remember { noteViewModel.notes }.collectAsState()
 
-    LaunchedEffect(Unit) {
-        noteViewModel.fetchNotes {
-            context.showToast(it)
-        }
-    }
+//    LaunchedEffect(Unit) {
+//        noteViewModel.fetchNotes {
+//            context.showToast(it)
+//        }
+//    }
+
+    val noteResult by noteViewModel.state.collectAsState()
 
     Scaffold(
         topBar = {
@@ -62,32 +62,34 @@ fun CourseListScreen(
             }
         }
     ) { paddingValues ->
-        if (notes.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Note is empty")
+        when {
+            noteResult.isLoading -> {
+                CustomLoading()
             }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = paddingValues,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                items(notes) { note ->
-                    NoteListItem(
-                        note = note,
-                        deleteNote = { noteId ->
-                            noteViewModel.deleteNote(noteId) {
-                                context.showToast(it)
+            noteResult.errorMessage != null -> {
+                CustomErrorText(message = noteResult.toString())
+            }
+            else -> {
+                val notes = noteResult.notes
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = paddingValues,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    items(notes) { note ->
+                        NoteListItem(
+                            note = note,
+                            deleteNote = { noteId ->
+                                noteViewModel.deleteNote(noteId) {
+                                    context.showToast(it)
+                                }
+                            },
+                            updateNote = {
+                                noteViewModel.setEditingNote(it)
+                                navigateToAdd()
                             }
-                        },
-                        updateNote = {
-                            noteViewModel.setEditingCourse(it)
-                            navigateToAdd()
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
