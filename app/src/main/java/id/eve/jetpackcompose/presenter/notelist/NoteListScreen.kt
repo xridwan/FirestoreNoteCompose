@@ -33,14 +33,6 @@ fun CourseListScreen(
     noteViewModel: NoteViewModel,
     navigateToAdd: () -> Unit
 ) {
-//    val notes by remember { noteViewModel.notes }.collectAsState()
-
-//    LaunchedEffect(Unit) {
-//        noteViewModel.fetchNotes {
-//            context.showToast(it)
-//        }
-//    }
-
     val noteResult by noteViewModel.state.collectAsState()
 
     Scaffold(

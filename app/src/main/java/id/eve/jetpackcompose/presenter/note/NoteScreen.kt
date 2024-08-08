@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import id.eve.jetpackcompose.presenter.NoteInputField
 import id.eve.jetpackcompose.presenter.NoteViewModel
 
 @Composable
@@ -170,44 +171,6 @@ fun NoteContent(
     }
 }
 
-@Composable
-fun NoteInputField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    textStyle: TextStyle,
-    singleLine: Boolean = true,
-    modifier: Modifier = Modifier
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = {
-            Text(
-                text = placeholder,
-                style = textStyle.copy(
-                    color = Color.Gray
-                ),
-            )
-        },
-        textStyle = textStyle,
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        singleLine = singleLine,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Sentences,
-            autoCorrect = true
-        ),
-    )
-}
 
 
 
