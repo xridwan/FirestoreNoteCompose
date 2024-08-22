@@ -54,7 +54,6 @@ fun AppNavigation(
         composable(Routes.NoteScreen.route) {
             NoteScreen(
                 noteViewModel = noteViewModel,
-                context = LocalContext.current
             ){
                 navController.navigateUp()
             }

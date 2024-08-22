@@ -74,7 +74,6 @@ fun CustomLoading(modifier: Modifier = Modifier) {
 
 @Composable
 fun CustomErrorText(
-    modifier: Modifier = Modifier,
     message: String
 ) {
     Box(

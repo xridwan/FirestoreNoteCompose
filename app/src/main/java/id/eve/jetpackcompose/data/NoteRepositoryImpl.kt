@@ -37,23 +37,6 @@ class NoteRepositoryImpl(
         }
     }
 
-    private fun getNotesFromSnapshot(): Flow<FirebaseResponse<List<Note>>> = callbackFlow {
-        val snapshotListener = db.orderBy("timestamp").addSnapshotListener { snapshot, e ->
-            val response = if (snapshot != null) {
-                val notes = snapshot.documents.map { document ->
-                    document.toObject(NoteDto::class.java)?.apply {
-                        id = document.id
-                    }?.toEntity() ?: Note()
-                }
-                FirebaseResponse.Success(notes)
-            } else {
-                FirebaseResponse.Error(e?.message ?: "Unknown error")
-            }
-            trySend(response).isSuccess
-        }
-        awaitClose { snapshotListener.remove() }
-    }
-
     override fun updateNote(note: Note): Flow<FirebaseResponse<Boolean>> = flow {
         emit(FirebaseResponse.Loading)
         try {
@@ -72,5 +55,22 @@ class NoteRepositoryImpl(
         } catch (e: Exception) {
             emit(FirebaseResponse.Error(e.message ?: "Unknown error"))
         }
+    }
+
+    private fun getNotesFromSnapshot(): Flow<FirebaseResponse<List<Note>>> = callbackFlow {
+        val snapshotListener = db.orderBy("timestamp").addSnapshotListener { snapshot, e ->
+            val response = if (snapshot != null) {
+                val notes = snapshot.documents.map { document ->
+                    document.toObject(NoteDto::class.java)?.apply {
+                        id = document.id
+                    }?.toEntity() ?: Note()
+                }
+                FirebaseResponse.Success(notes)
+            } else {
+                FirebaseResponse.Error(e?.message ?: "Unknown error")
+            }
+            trySend(response).isSuccess
+        }
+        awaitClose { snapshotListener.remove() }
     }
 }

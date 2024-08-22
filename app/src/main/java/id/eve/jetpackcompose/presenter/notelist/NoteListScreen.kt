@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import id.eve.jetpackcompose.presenter.CustomErrorText
 import id.eve.jetpackcompose.presenter.CustomLoading
 import id.eve.jetpackcompose.presenter.NoteViewModel
@@ -39,7 +38,9 @@ fun CourseListScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                title = { Text(text = "Firestore Note") },
+                title = {
+                    Text(text = "Firestore Note")
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )

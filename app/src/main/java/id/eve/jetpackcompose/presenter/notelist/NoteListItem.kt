@@ -33,7 +33,9 @@ fun NoteListItem(
     deleteNote: (String) -> Unit,
     updateNote: (Note) -> Unit
 ) {
-    val formattedDate = remember(note.timestamp) { Utils.formatTimestamp(note.timestamp) }
+    val formattedDate = remember(note.timestamp) {
+        Utils.formatTimestamp(note.timestamp)
+    }
 
     Card(
         modifier = Modifier

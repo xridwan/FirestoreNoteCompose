@@ -80,7 +80,7 @@ class NoteViewModel @Inject constructor(
         )
     }
 
-    fun <T> handleResponse(response: FirebaseResponse<T>, onSuccess: (T) -> Unit) {
+    private fun <T> handleResponse(response: FirebaseResponse<T>, onSuccess: (T) -> Unit) {
         when (response) {
             is FirebaseResponse.Loading -> updateState(isLoading = true)
             is FirebaseResponse.Success -> {
@@ -99,9 +99,7 @@ class NoteViewModel @Inject constructor(
         viewModelScope.launch {
             noteUseCase.addNote(note).collect { value ->
                 handleResponse(value) {
-                    if (it) {
-                        clearForm()
-                    }
+                    if (it) clearForm()
                 }
             }
         }
@@ -122,9 +120,7 @@ class NoteViewModel @Inject constructor(
         viewModelScope.launch {
             noteUseCase.updateNote(note).collect { value ->
                 handleResponse(value) {
-                    if (it) {
-                        clearForm()
-                    }
+                    if (it) clearForm()
                 }
             }
         }
